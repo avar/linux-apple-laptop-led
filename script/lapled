@@ -1,0 +1,120 @@
+#!/usr/bin/env perl
+use strict;
+
+use Pod::Usage ();
+use Getopt::Long ();
+
+use IO::Handle ();
+use Time::HiRes qw(usleep);
+use Linux::Apple::Laptop::LED qw($ON $OFF);
+
+=head1 NAME
+
+lapled - Control the front LED on Apple laptops under Linux
+
+=head1 SYNOPSIS
+
+    lapled on $((10**5))  # turn it on for 0.1 seconds
+    lapled on             # keep it on
+    lapled off $((10**6)) # turn it off for a second
+    lapled off            # keep it off
+
+=head1 DESCRIPTION
+
+Switches the laptop LED on Apple laptops running Linux on and off with
+L<Linux::Apple::Laptop::LED>. Can optionally turn the LED back on/off
+after a given number of microseconds.
+
+=head1 OPTIONS
+
+=over
+
+=item -h, --help
+
+Print a usage message listing all available options
+
+=back
+
+=head1 AUTHOR
+
+E<AElig>var ArnfjE<ouml>rE<eth> Bjarmason <avar@cpan.org>
+
+=head1 LICENSE
+
+This program is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself.
+
+=cut
+
+# Get command line options
+Getopt::Long::Parser->new(
+    config => [ qw(bundling no_ignore_case no_require_order) ],
+)->getoptions(
+    'h|help' => \my $help,
+) or help();
+
+my ($state, $msec) = @ARGV;
+
+#
+# --help and incorrect usage
+#
+
+# Display --help if requested
+help(verbose => 1, exitval => 0)
+    if $help;
+
+# no valid action
+help(verbose => 0, exitval => 1)
+    if not defined $state or $state !~ /^(?:on|off)$/;
+
+# non-numeric msecs
+help(verbose => 0, exitval => 1)
+    if $msec and $msec !~ /^[0-9]+$/;
+
+#
+# Handle /dev/adb not being writable
+#
+
+unless (-e "/dev/adb") {
+    print STDERR "/dev/adb does not exist on this system\n";
+    exit 1;
+}
+
+unless (-w "/dev/adb") {
+    print STDERR "/dev/adb is not writable by this user\n";
+    exit 1;
+}
+
+#
+# main program
+#
+
+open my $fh, ">", "/dev/adb" or die "Can't open /dev/adb for writing: $!";
+$fh->autoflush(1);
+
+if ($state eq "off") {
+    syswrite($fh => $OFF);
+} elsif ($state eq "on") {
+    syswrite($fh => $ON);
+}
+
+if ($msec) {
+    usleep($msec);
+
+    # Turn back to previous state
+    if ($state eq "on") {
+        syswrite($fh => $OFF);
+    } elsif ($state eq "off") {
+        syswrite($fh => $ON);
+    }
+}
+
+sub help
+{
+    my %arg = @_;
+
+    Pod::Usage::pod2usage(
+        -verbose => $arg{ verbose },
+        -exitval => $arg{ exitval } || 0,
+    );
+}
