@@ -23,9 +23,9 @@ lapled - Control the front LED on Apple laptops under Linux
 
 =head1 DESCRIPTION
 
-Switches the laptop LED on Apple laptops running Linux on and off with
-L<Linux::Apple::Laptop::LED>. Can optionally turn the LED back on/off
-after a given number of microseconds.
+Switches the laptop LED on Apple laptops running Linux on and off. Can
+optionally turn the LED back on/off after a given number of
+microseconds.
 
 =head1 OPTIONS
 
@@ -36,6 +36,10 @@ after a given number of microseconds.
 Print a usage message listing all available options
 
 =back
+
+=head1 SEE ALSO
+
+L<Linux::Apple::Laptop::LED>
 
 =head1 AUTHOR
 
