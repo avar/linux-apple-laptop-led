@@ -1,12 +1,12 @@
 package Linux::Apple::Laptop::LED;
 use Exporter 'import';
 
-$VERSION = '0.01';
+$VERSION = '0.02';
+
+@EXPORT_OK = qw($ON $OFF);
 
 $ON  = "\x06\xee\x04\x00\x01";
 $OFF = "\x06\xee\x04\x00\x00";
-
-@EXPORT_OK = qw($ON $OFF);
 
 __END__
 
@@ -27,7 +27,7 @@ Linux::Apple::Laptop::LED - Turn the front LED on Apple laptops on and off via A
     for (1 .. 10) {
         syswrite($fh => $ON);
         usleep($nap / 2);
-        syswrite($fh=> $OFF);
+        syswrite($fh => $OFF);
         usleep($nap / 2);
     }
 

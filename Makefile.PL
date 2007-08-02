@@ -7,6 +7,8 @@ author        'Ævar Arnfjörð Bjarmason <avar@cpan.org>';
 abstract_from 'LED.pm';
 license_from  'LED.pm';
 
+install_script 'script/lapled';
+
 # LED.pm
 requires 'Exporter' => 0;
 
