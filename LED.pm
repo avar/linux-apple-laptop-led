@@ -1,7 +1,7 @@
 package Linux::Apple::Laptop::LED;
 use Exporter 'import';
 
-$VERSION = '0.02';
+$VERSION = '0.03';
 
 @EXPORT_OK = qw($ON $OFF);
 

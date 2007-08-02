@@ -6,7 +6,9 @@ use Getopt::Long ();
 
 use IO::Handle ();
 use Time::HiRes qw(usleep);
-use Linux::Apple::Laptop::LED qw($ON $OFF);
+
+our $ON  = "\x06\xee\x04\x00\x01";
+our $OFF = "\x06\xee\x04\x00\x00";
 
 =head1 NAME
 
