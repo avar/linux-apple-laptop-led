@@ -1,3 +1,10 @@
+2007-08-03  Ævar Arnfjörð Bjarmason  <avar@cpan.org> (0.05)
+
+	* LED.pm: Don't use Exporter.pm, now pre-5.8 compatable
+	* LED.pm: Export functions instead of variablsea
+	* t/synopsis.t: Test update for the above
+	* .git: Include the git repository for easy hacking
+
 2007-07-09  Ævar Arnfjörð Bjarmason  <avar@cpan.org> (0.04)
 
 	* script/lapled: Updated the POD to indicate that this no longer uses
