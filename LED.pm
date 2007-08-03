@@ -1,12 +1,16 @@
 package Linux::Apple::Laptop::LED;
-use Exporter 'import';
 
-$VERSION = '0.04';
+our $VERSION = '0.04';
 
-@EXPORT_OK = qw($ON $OFF);
+sub  ON () { "\x06\xee\x04\x00\x01" }
+sub OFF () { "\x06\xee\x04\x00\x00" }
 
-$ON  = "\x06\xee\x04\x00\x01";
-$OFF = "\x06\xee\x04\x00\x00";
+sub import
+{
+    shift;
+    my $caller = caller;
+    *{"$caller\::$_"} = \&$_ for @_;
+}
 
 __END__
 
@@ -18,16 +22,16 @@ Linux::Apple::Laptop::LED - Turn the front LED on Apple laptops on and off via A
 
     use IO::Handle ();
     use Time::HiRes qw(usleep);
-    use Linux::Apple::Laptop::LED qw($ON $OFF);
+    use Linux::Apple::Laptop::LED qw(ON OFF);
 
     open my $fh, ">", "/dev/adb" or die $!;
     $fh->autoflush(1);
 
     my $nap = 100_000; # 0.1 seconds
     for (1 .. 10) {
-        syswrite($fh => $ON);
+        syswrite($fh => ON);
         usleep($nap / 2);
-        syswrite($fh => $OFF);
+        syswrite($fh => OFF);
         usleep($nap / 2);
     }
 
@@ -35,12 +39,12 @@ Linux::Apple::Laptop::LED - Turn the front LED on Apple laptops on and off via A
 
 Provides an interface for turning the front LED on Apple laptops
 running Linux on and off. The user needs to open F</dev/adb> and print
-either C<$ON> or C<$OFF>> to turn the led on and off, respectively.
+either C<ON> or C<OFF> to it to turn the led on and off, respectively.
 
 =head1 EXPORTS
 
-Can optionally export two package variables (C<$ON> ond C<$OFF>) which
-contain a string to be written to F</dev/adb>.
+Can optionally export two constant subroutines, C<ON> ond C<OFF>,
+which return a string to be written to F</dev/adb>.
 
 =head1 AUTHOR
 
