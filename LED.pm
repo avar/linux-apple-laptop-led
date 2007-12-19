@@ -1,6 +1,6 @@
 package Linux::Apple::Laptop::LED;
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 sub  ON () { "\x06\xee\x04\x00\x01" }
 sub OFF () { "\x06\xee\x04\x00\x00" }
